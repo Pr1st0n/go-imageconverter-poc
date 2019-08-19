@@ -1,0 +1,11 @@
+version: "3.0"
+
+services:
+  imageconverter:
+    build: ./
+    image: go-imageconverter
+    container_name: go-imageconverter
+    ports:
+      - 8088:8088
+    volumes:
+      - ./:/go/src/app
