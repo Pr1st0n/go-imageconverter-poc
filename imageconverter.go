@@ -16,7 +16,7 @@ func main() {
 	vips.Startup(nil)
 	defer vips.Shutdown()
 
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", imageHandler)
 	log.Fatal(http.ListenAndServe("0.0.0.0:8088", nil))
 }
 
@@ -91,7 +91,8 @@ func (crop *Crop) doCrop(reader io.Reader, writer io.Writer, errChan chan error)
 	errChan <- err
 }
 
-func handler(res http.ResponseWriter, r *http.Request) {
+func imageHandler(res http.ResponseWriter, r *http.Request) {
+	var err error
 	query := r.URL.Query()
 	querySource := query.Get("source")
 
@@ -101,14 +102,16 @@ func handler(res http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resize, err := Resize{}.init(strings.Split(query.Get("resize"), "x"))
+	resize := &Resize{}
+	resize, err = resize.init(strings.Split(query.Get("resize"), "x"))
 	if err != nil {
 		_, _ = res.Write([]byte(err.Error()))
 		res.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	crop, err := Crop{}.init(strings.Split(query.Get("crop"), "x"))
+	crop := &Crop{}
+	crop, err = crop.init(strings.Split(query.Get("crop"), "x"))
 	if err != nil {
 		_, _ = res.Write([]byte(err.Error()))
 		res.WriteHeader(http.StatusBadRequest)
