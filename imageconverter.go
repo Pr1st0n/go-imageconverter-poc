@@ -97,31 +97,31 @@ func imageHandler(res http.ResponseWriter, r *http.Request) {
 	querySource := query.Get("source")
 
 	if len(querySource) == 0 {
-		_, _ = res.Write([]byte(fmt.Sprintf("source parameter is required")))
 		res.WriteHeader(http.StatusBadRequest)
+		_, _ = res.Write([]byte(fmt.Sprintf("source parameter is required")))
 		return
 	}
 
 	resize := &Resize{}
 	resize, err = resize.init(strings.Split(query.Get("resize"), "x"))
 	if err != nil {
-		_, _ = res.Write([]byte(err.Error()))
 		res.WriteHeader(http.StatusBadRequest)
+		_, _ = res.Write([]byte(err.Error()))
 		return
 	}
 
 	crop := &Crop{}
 	crop, err = crop.init(strings.Split(query.Get("crop"), "x"))
 	if err != nil {
-		_, _ = res.Write([]byte(err.Error()))
 		res.WriteHeader(http.StatusBadRequest)
+		_, _ = res.Write([]byte(err.Error()))
 		return
 	}
 
 	fileReader, err := os.Open(querySource)
 	if err != nil {
-		_, _ = res.Write([]byte(fmt.Sprintf("failed to get %s: %v", querySource, err)))
 		res.WriteHeader(http.StatusInternalServerError)
+		_, _ = res.Write([]byte(fmt.Sprintf("failed to get %s: %v", querySource, err)))
 		return
 	}
 
@@ -133,16 +133,16 @@ func imageHandler(res http.ResponseWriter, r *http.Request) {
 
 	if err = <-errChan; err != nil {
 		_ = pipeWriter.Close()
-		_, _ = res.Write([]byte(fmt.Sprintf("failed to crop %s: %v", querySource, err)))
 		res.WriteHeader(http.StatusInternalServerError)
+		_, _ = res.Write([]byte(fmt.Sprintf("failed to crop %s: %v", querySource, err)))
 		return
 	}
 
 	_ = pipeWriter.Close()
 
 	if err = <-errChan; err != nil {
-		_, _ = res.Write([]byte(fmt.Sprintf("failed to resize %s: %v", querySource, err)))
 		res.WriteHeader(http.StatusInternalServerError)
+		_, _ = res.Write([]byte(fmt.Sprintf("failed to resize %s: %v", querySource, err)))
 		return
 	}
 }
