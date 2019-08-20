@@ -1,0 +1,12 @@
+version: "3.0"
+
+services:
+  imageconverter-dev:
+    build: ./
+    image: go-imageconverter
+    container_name: go-imageconverter
+    ports:
+      - 8088:8088
+    volumes:
+      - ./:/go/src/app
+    command: CompileDaemon -log-prefix=false -build="go build -o imageconverter ." -command="./imageconverter"

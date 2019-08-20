@@ -14,4 +14,4 @@ RUN apk add --no-cache git && \
     go get -u github.com/githubnemo/CompileDaemon && \
     go get -u github.com/davidbyttow/govips/pkg/vips
 
-ENTRYPOINT CompileDaemon -log-prefix=false -build="go build -o imageconverter ." -command="./imageconverter"
+CMD ["./imageconverter"]

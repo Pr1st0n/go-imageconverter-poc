@@ -1,0 +1,10 @@
+version: "3.0"
+
+services:
+  imageconverter-test:
+    build: ./
+    image: go-imageconverter
+    container_name: go-imageconverter-test
+    volumes:
+      - ./:/go/src/app
+    command: go test -v
